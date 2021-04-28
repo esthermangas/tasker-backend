@@ -1,17 +1,35 @@
-import { createSchema, Type, typedModel, ExtractDoc, ExtractProps } from 'ts-mongoose';
-import {UserSchema} from "./user";
+import mongoose, {Document, Schema} from "mongoose";
 
-export const ColectionSchema = createSchema(
+export interface Colection extends Document{
+    name: string,
+    icon: string,
+    color: string,
+    user: string
+}
+export const ColectionSchema = new mongoose.Schema(
     {
-        name: Type.string({required: true}),
-        icon: Type.string({required: true}),
-        color: Type.string({required: true}),
-        user: Type.ref(Type.objectId({required: true})).to('User', UserSchema)
+        name: {
+            type: String,
+            required: true
+        },
+        icon: {
+            type: String,
+            required: true
+        },
+        color: {
+            type: String,
+            required: true
+        },
+        user: {
+            type: Schema.Types.ObjectId,
+            ref: 'User',
+            required: true
+        }
     },
     { timestamps: { createdAt: true, updatedAt:true } }
 );
 
-ColectionSchema.virtual('id').get(function(this : ColectionDoc){
+ColectionSchema.virtual('id').get(function(this : Colection){
     return this._id.toHexString();
 });
 
@@ -21,7 +39,4 @@ ColectionSchema.set('toJSON', {
     virtuals: true
 });
 
-export const Colection = typedModel('Colection', ColectionSchema);
-export type ColectionDoc = ExtractDoc<typeof ColectionSchema>;
-export type ColectionProps = ExtractProps<typeof ColectionSchema>;
-
+export const ColectionModel = mongoose.model<Colection>('Colection', ColectionSchema);

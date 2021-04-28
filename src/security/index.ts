@@ -1,14 +1,13 @@
 import express from 'express';
 import jwtMiddleware from 'express-jwt';
-import {User, UserDoc, jwtSecret, generateJWT, comparePassword} from '../models/user';
-import {UserProps} from "../models/user";
+import {User, UserModel, jwtSecret, generateJWT, comparePassword} from '../models/user';
 
 const buildRouter : Function= (app: express.Application) => {
 
     app.post("/login", (req: express.Request, res: express.Response) => {
         const {email, password} = req.body;
 
-        User.findOne({email}, (err, user: UserDoc) => {
+        UserModel.findOne({email}, (err: any, user: User) => {
             if(err){
                 return res.status(500).json({error: err.message});
             }
@@ -26,17 +25,17 @@ const buildRouter : Function= (app: express.Application) => {
     });
 
     app.post("/register", (req: express.Request, res: express.Response) => {
-        const userData : UserProps = req.body;
+        const userData : User = req.body;
 
 
-        User.findOne({email: userData.email}, (err, foundUser) => {
+        UserModel.findOne({email: userData.email}, (err: any, foundUser: User) => {
             if(err){
                 return res.status(500).json({error: err.message});
             }
 
             if(foundUser) return res.status(400).json({error: {email: 'This email is already registered'}});
 
-            const user : UserDoc = new User(userData);
+            const user : User = new UserModel(userData);
             user.save((err, newUser) => {
                 if(err) return res.status(500).json({error: err.message});
 

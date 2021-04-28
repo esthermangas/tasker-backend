@@ -1,9 +1,9 @@
-import {User, UserDoc, UserProps} from '../models/user';
+import {User, UserModel} from '../models/user';
 import express from 'express';
 
 const getUser = (req : express.Request, res: express.Response, next: express.NextFunction) => {
   const id = req.params.id;
-  User.findById(id, null , {}, (err, user)=>{
+  UserModel.findById(id, null , {}, (err, user)=>{
     if(err)
       return res.status(500).json({error: err.message});
 
@@ -22,7 +22,7 @@ const getUser = (req : express.Request, res: express.Response, next: express.Nex
 const buildRouter = (app: express.Application) => {
 
   app.get('/user', (req: express.Request ,res: express.Response)=> {
-    User.find((err, users) => {
+    UserModel.find((err, users) => {
       if(err)
         return res.status(500).json({error: err.message});
 
@@ -31,13 +31,13 @@ const buildRouter = (app: express.Application) => {
   });
 
   app.get('/user/:id', getUser, (req: express.Request ,res: express.Response) => {
-    const user : UserDoc = res.locals.user;
+    const user : User = res.locals.user;
     return res.status(200).json(user);
   });
 
   app.post('/user', (req: express.Request ,res: express.Response)=> {
     const body = req.body;
-    const user : UserDoc = new User(body);
+    const user : User = new UserModel(body);
 
     user.save({}, (err, newUser) => {
       if(err)
@@ -48,7 +48,7 @@ const buildRouter = (app: express.Application) => {
   });
 
   app.patch('/user/:id', getUser, (req: express.Request ,res: express.Response)=> {
-    User.findOneAndUpdate({_id: req.params.id}, req.body, {new: true}, (err, user)=>{
+    UserModel.findOneAndUpdate({_id: req.params.id}, req.body, {new: true}, (err, user)=>{
       if(err)
         return res.status(500).json({error: err.message});
 
@@ -57,7 +57,7 @@ const buildRouter = (app: express.Application) => {
   });
 
   app.delete('/user/:id', getUser, (req:express.Request, res: express.Response)=> {
-    User.findOneAndDelete({_id: req.params.id},{}, (err, user)=>{
+    UserModel.findOneAndDelete({_id: req.params.id},{}, (err, user)=>{
       if(err)
         return res.status(500).json({error: err.message});
       return res.status(204).send();

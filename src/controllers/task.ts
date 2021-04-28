@@ -1,9 +1,9 @@
-import {Task, TaskDoc, TaskProps, TaskSchema} from '../models/task';
+import {Task,TaskModel, TaskSchema} from '../models/task';
 import express from 'express';
 
 const getTask = (req : express.Request, res: express.Response, next: express.NextFunction) => {
     const id = req.params.id;
-    Task.findById(id, null , {}, (err, task)=>{
+    TaskModel.findById(id, null , {}, (err, task)=>{
         if(err)
             return res.status(500).json({error: err.message});
 
@@ -38,7 +38,7 @@ const buildRouter = (app: express.Application) => {
             // @ts-ignore
             databaseQuery['date'] = { $gte: from, $lte: to }
         }
-        Task.find(databaseQuery, (err, tasks) => {
+        TaskModel.find(databaseQuery, (err, tasks) => {
             if(err)
                 return res.status(500).json({error: err.message});
             return res.status(200).json(tasks);
@@ -46,13 +46,13 @@ const buildRouter = (app: express.Application) => {
     });
 
     app.get('/task/:id', getTask, (req: express.Request ,res: express.Response) => {
-        const task : TaskDoc = res.locals.task;
+        const task : Task = res.locals.task;
         return res.status(200).json(task);
     });
 
     app.post('/task', (req: express.Request ,res: express.Response)=> {
         const body = req.body;
-        const task : TaskDoc = new Task(body);
+        const task : Task = new TaskModel(body);
         task.user = res.locals.auth.id;
         task.save({}, (err, newTask) => {
             if(err)
@@ -64,7 +64,7 @@ const buildRouter = (app: express.Application) => {
 
     app.patch('/task/:id', getTask, (req: express.Request ,res: express.Response)=> {
         req.body.user = res.locals.auth.id;
-        Task.findOneAndUpdate({_id: req.params.id}, req.body, {new: true}, (err, task)=>{
+        TaskModel.findOneAndUpdate({_id: req.params.id}, req.body, {new: true}, (err, task)=>{
             if(err)
                 return res.status(500).json({error: err.message});
 
@@ -73,7 +73,7 @@ const buildRouter = (app: express.Application) => {
     });
 
     app.delete('/task/:id', getTask, (req:express.Request, res: express.Response)=> {
-        Task.findOneAndDelete({_id: req.params.id},{}, (err, task)=>{
+        TaskModel.findOneAndDelete({_id: req.params.id},{}, (err, task)=>{
             if(err)
                 return res.status(500).json({error: err.message});
 
