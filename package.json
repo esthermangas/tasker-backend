@@ -22,7 +22,8 @@
     "winston": "^3.3.3"
   },
   "scripts": {
-    "start": "nodemon src/index.ts",
+    "start": "node build/index.js",
+    "start:dev": "nodemon src/index.ts",
     "build": "tsc"
   },
   "devDependencies": {
