@@ -24,7 +24,7 @@
     "winston": "^3.3.3"
   },
   "scripts": {
-    "postinstall": "npm run build-ts",
+    "postinstall": "npm run build",
     "start": "nodemon src/index.ts",
     "build": "tsc --project ./"
   },
