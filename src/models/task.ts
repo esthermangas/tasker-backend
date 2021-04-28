@@ -5,7 +5,7 @@ import {UserSchema} from "./user";
 export const TaskSchema = createSchema(
     {
         description: Type.string({required: true}),
-        done: Type.boolean({required: true}),
+        done: Type.boolean({required: true, default: false}),
         date: Type.date({required: true}),
         colection: Type.ref(Type.objectId({required: true})).to('Colection', ColectionSchema),
         user: Type.ref(Type.objectId({required: true})).to('User', UserSchema)

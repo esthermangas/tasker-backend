@@ -31,7 +31,6 @@ const buildRouter = (app: express.Application) => {
   });
 
   app.get('/user/:id', getUser, (req: express.Request ,res: express.Response) => {
-    console.log("llega id");
     const user : UserDoc = res.locals.user;
     return res.status(200).json(user);
   });

@@ -38,7 +38,6 @@ const buildRouter = (app: express.Application) => {
             // @ts-ignore
             databaseQuery['date'] = { $gte: from, $lte: to }
         }
-        console.log(databaseQuery);
         Task.find(databaseQuery, (err, tasks) => {
             if(err)
                 return res.status(500).json({error: err.message});

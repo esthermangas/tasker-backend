@@ -18,12 +18,13 @@
     "express": "4.17.1",
     "express-jwt": "^6.0.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.11.18",
+    "mongoose": "^5.12.4",
     "morgan": "^1.10.0",
     "ts-mongoose": "^0.0.24",
     "winston": "^3.3.3"
   },
   "scripts": {
+    "postinstall": "npm run build-ts",
     "start": "nodemon src/index.ts",
     "build": "tsc --project ./"
   },
