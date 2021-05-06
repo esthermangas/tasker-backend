@@ -14,11 +14,14 @@ const buildRouter : Function= (app: express.Application) => {
             if(!user){
                 return res.status(404).json({error: {email: "This email is not registered"}});
             }
-            if(!comparePassword(user,password)){
-                return res.status(400).json({error: {password: 'Wrong password'}});
-            }else {
-                return res.status(200).json({user, token: generateJWT(user)});
-            }
+
+            comparePassword(user, password).then(result => {
+                if(!result){
+                    return res.status(400).json({error: {password: 'Wrong password'}});
+                }else{
+                    return res.status(200).json({user, token: generateJWT(user)});
+                }
+            })
 
         })
 
